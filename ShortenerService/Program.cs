@@ -1,9 +1,16 @@
 
+using ShortenerService.Mongo;
+using ShortenerService.Repository;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddGrpc();
 builder.Services.AddControllers();
+
+builder.Services.Configure<MongoDbSettings>(builder.Configuration.GetSection("MongoDb"));
+builder.Services.AddSingleton<IShortLinkRepository, ShortLinkRepository>();
+builder.Services.AddScoped<ShortenerService.Services.ShortenerService>();
 
 builder.WebHost.ConfigureKestrel(options =>
 {
