@@ -1,16 +1,23 @@
 
+using MongoDB.Driver;
 using ShortenerService.Mongo;
 using ShortenerService.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
+// MongoDB config
+var mongoDbSettings = builder.Configuration.GetSection("MongoDb").Get<MongoDbSettings>();
+var client = new MongoClient(mongoDbSettings.ConnectionString);
+var database = client.GetDatabase(mongoDbSettings.DatabaseName);
+
+// Register MongoDb context
+builder.Services.AddSingleton<IMongoDatabase>(database);
+
+// Register generic repo for dependency injection
+builder.Services.AddScoped(typeof(IMongoRepository<>), typeof(MongoRepository<>));
 
 // Add services to the container.
 builder.Services.AddGrpc();
 builder.Services.AddControllers();
-
-builder.Services.Configure<MongoDbSettings>(builder.Configuration.GetSection("MongoDb"));
-builder.Services.AddSingleton<IShortLinkRepository, ShortLinkRepository>();
-builder.Services.AddScoped<ShortenerService.Services.ShortenerService>();
 
 builder.WebHost.ConfigureKestrel(options =>
 {

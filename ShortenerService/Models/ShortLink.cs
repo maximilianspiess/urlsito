@@ -6,7 +6,7 @@ namespace ShortenerService.Models;
 public class ShortLink
 {
     [BsonId] [BsonRepresentation(BsonType.String)]
-    public string? HashUrl { get; set; }
+    public byte[] HashUrl { get; set; }
 
     [BsonElement("createdAt")]
     public DateTime CreatedAt { get; } = DateTime.UtcNow ;
