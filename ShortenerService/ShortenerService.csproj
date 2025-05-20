@@ -8,12 +8,12 @@
 
     <ItemGroup>
         <PackageReference Include="Grpc.AspNetCore" Version="2.64.0"/>
+        <PackageReference Include="MongoDB.Driver" Version="3.4.0" />
         <Protobuf Include="Protos\longUrl.proto" GrpcServices="Server"/>
     </ItemGroup>
 
     <ItemGroup>
       <Folder Include="Grpc\" />
-      <Folder Include="Services\" />
     </ItemGroup>
 
 </Project>
