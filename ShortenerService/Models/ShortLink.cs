@@ -1,15 +1,13 @@
-using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace ShortenerService.Models;
 
-public class ShortLink
+public class ShortLink : IShortLink
 {
-    [BsonId]
-    [BsonRepresentation(BsonType.ObjectId)]
     public string? HashUrl { get; set; }
 
-    [BsonElement("shortUrl")] public string ShortUrl { get; set; } = null!;
+    private DateTime CreatedAt = DateTime.Now;
 
-
+    [BsonElement("shortUrl")]
+    public string ShortUrl { get; set; } = null!;
 }
