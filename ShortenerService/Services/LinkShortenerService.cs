@@ -1,4 +1,3 @@
-using System.Runtime.Intrinsics.Arm;
 using System.Security.Cryptography;
 using System.Text;
 using ShortenerService.Models;
@@ -6,21 +5,20 @@ using ShortenerService.Repository;
 
 namespace ShortenerService.Services;
 
-public class ShortenerService
+public class LinkShortenerService
 {
+    private readonly IShortLinkRepository _repository;
 
-    private readonly IMongoRepository<ShortLink> _repository;
-
-    public ShortenerService(IMongoRepository<ShortLink> repository)
+    public LinkShortenerService(IShortLinkRepository repository)
     {
         _repository = repository;
     }
-    
+
     public async Task<string> ShortenUrl(string longUrl)
     {
         var shortUrl = GenerateShortUuid();
         var hashLongUrl = SHA256.Create().ComputeHash(Encoding.UTF8.GetBytes(longUrl));
-        
+
         var shortLink = new ShortLink
         {
             HashUrl = hashLongUrl,

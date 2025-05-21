@@ -5,12 +5,11 @@ namespace ShortenerService.Models;
 
 public class ShortLink
 {
-    [BsonId] [BsonRepresentation(BsonType.String)]
-    public byte[] HashUrl { get; set; }
+    [BsonId]
+    [BsonRepresentation(BsonType.String)]
+    public ObjectId Id { get; set; }
+    [BsonElement("hash")] public byte[] HashUrl { get; set; }
 
-    [BsonElement("createdAt")]
-    public DateTime CreatedAt { get; } = DateTime.UtcNow ;
-
-    [BsonElement("shortUrl")]
-    public string ShortUrl { get; set; } = null!;
+    [BsonElement("createdAt")] public DateTime CreatedAt { get; } = DateTime.UtcNow;
+    [BsonElement("shortUrl")] public string ShortUrl { get; set; } = null!;
 }

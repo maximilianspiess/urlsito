@@ -2,6 +2,8 @@ namespace ShortenerService.Mongo;
 
 public class MongoDbSettings
 {
-    public string DatabaseName { get; set; } = default;
-    public string ConnectionString { get; set; } = default;
+    public required string DatabaseName { get; init; }
+    public required string ConnectionString { get; init; }
+    
+    public required string CollectionName { get; init; }
 }
