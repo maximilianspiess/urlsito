@@ -16,23 +16,18 @@ public class LinkShortenerService
 
     public async Task<string> ShortenUrl(string longUrl)
     {
-        var shortUrl = GenerateShortUuid();
-        var hashLongUrl = SHA256.Create().ComputeHash(Encoding.UTF8.GetBytes(longUrl));
+        var hashBytes = SHA256.HashData(Encoding.UTF8.GetBytes(longUrl));
+        var hashLongUrlString = Convert.ToHexStringLower(hashBytes);
+        var hashLongUrlInt = BitConverter.ToUInt128(hashBytes);
+        var shortUrl = (hashLongUrlInt % (1 << 30)).ToString("x8");
 
         var shortLink = new ShortLink
         {
-            HashUrl = hashLongUrl,
+            HashUrl = hashLongUrlString,
             ShortUrl = shortUrl
         };
 
         await _repository.AddAsync(shortLink);
         return shortUrl;
-    }
-
-    private string GenerateShortUuid()
-    {
-        var uuid = Guid.NewGuid();
-        // TODO need to shorten!
-        return uuid.ToString();
     }
 }
