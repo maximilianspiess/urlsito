@@ -1,31 +1,29 @@
 using Microsoft.AspNetCore.Mvc;
 using ShortenerService.Services;
 
-namespace ShortenerService.Controllers
+namespace ShortenerService.Controllers;
 
+[ApiController]
+[Route("api/[controller]")]
+
+public class ShortenerController : ControllerBase
 {
-    [ApiController]
-    [Route("api/[controller]")]
+    private readonly LinkShortenerService _service;
 
-    public class ShortenerController : ControllerBase
+    public ShortenerController(LinkShortenerService service)
     {
-        private readonly LinkShortenerService _service;
+        _service = service;
+    }
 
-        public ShortenerController(LinkShortenerService service)
-        {
-            _service = service;
-        }
+    [HttpGet("hello")]
+    public ActionResult<string> Get()
+    {
+        return "This is the Shortener Service!";
+    }
 
-        [HttpGet("hello")]
-        public ActionResult<string> Get()
-        {
-            return "This is the Shortener Service!";
-        }
-
-        [HttpPost]
-        public async Task<ActionResult<string>> CreateNewShortUrl([FromBody] string longUrl)
-        {
-            return await _service.ShortenUrl(longUrl);
-        }
+    [HttpPost]
+    public async Task<ActionResult<string>> CreateNewShortUrl([FromBody] string longUrl)
+    {
+        return await _service.ShortenUrl(longUrl);
     }
 }

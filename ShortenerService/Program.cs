@@ -19,13 +19,13 @@ builder.Services.Configure<MongoDbSettings>(builder.Configuration.GetSection("Mo
 builder.Services.AddTransient<IShortLinkRepository, ShortLinkRepository>();
 
 // Register LinkShortenerService
+builder.Services.Configure<RabbitMqSettings>(builder.Configuration.GetSection("RabbitMQ"));
 builder.Services.AddScoped<LinkShortenerService>();
 
 // Register RabbitMQ Sender
 builder.Services.AddScoped<ISender, Sender>();
 
 // Add services to the container.
-builder.Services.AddGrpc();
 builder.Services.AddControllers();
 
 builder.WebHost.ConfigureKestrel(options =>

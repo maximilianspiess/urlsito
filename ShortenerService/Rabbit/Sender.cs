@@ -1,5 +1,6 @@
 using System.Text;
 using System.Text.Json;
+using Microsoft.Extensions.Options;
 using RabbitMQ.Client;
 using ShortenerService.Models;
 
@@ -9,9 +10,9 @@ public class Sender: ISender
 {
     private readonly RabbitMqSettings _settings;
     
-    public Sender(RabbitMqSettings settings)
+    public Sender(IOptions<RabbitMqSettings> settings)
     {
-        _settings = settings;
+        _settings = settings.Value;
     }
 
     public async void Send(NewShortUrlMessage message)
@@ -36,5 +37,6 @@ public class Sender: ISender
             body: bodyBytes
         );
 
+        await connection.CloseAsync();
     }
 }
