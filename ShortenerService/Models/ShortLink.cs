@@ -8,8 +8,8 @@ public class ShortLink
     [BsonId]
     [BsonRepresentation(BsonType.String)]
     public ObjectId Id { get; set; }
-    [BsonElement("hash")] public string HashUrl { get; set; }
+    [BsonElement("hashLongUrl")] public required string HashLongUrl { get; set; }
 
     [BsonElement("createdAt")] public DateTime CreatedAt { get; } = DateTime.UtcNow;
-    [BsonElement("shortUrl")] public string ShortUrl { get; set; } = null!;
+    [BsonElement("shortUrl")] public required string ShortUrl { get; set; } = null!;
 }

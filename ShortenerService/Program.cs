@@ -1,6 +1,7 @@
 
 using MongoDB.Driver;
 using ShortenerService.Mongo;
+using ShortenerService.Rabbit;
 using ShortenerService.Repository;
 using ShortenerService.Services;
 
@@ -17,8 +18,11 @@ builder.Services.Configure<MongoDbSettings>(builder.Configuration.GetSection("Mo
 // Register generic repo for dependency injection
 builder.Services.AddTransient<IShortLinkRepository, ShortLinkRepository>();
 
-
+// Register LinkShortenerService
 builder.Services.AddScoped<LinkShortenerService>();
+
+// Register RabbitMQ Sender
+builder.Services.AddScoped<ISender, Sender>();
 
 // Add services to the container.
 builder.Services.AddGrpc();

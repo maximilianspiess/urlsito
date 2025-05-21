@@ -1,6 +1,7 @@
 using System.Security.Cryptography;
 using System.Text;
 using ShortenerService.Models;
+using ShortenerService.Rabbit;
 using ShortenerService.Repository;
 
 namespace ShortenerService.Services;
@@ -8,10 +9,12 @@ namespace ShortenerService.Services;
 public class LinkShortenerService
 {
     private readonly IShortLinkRepository _repository;
+    private readonly ISender _sender;
 
-    public LinkShortenerService(IShortLinkRepository repository)
+    public LinkShortenerService(IShortLinkRepository repository, ISender sender)
     {
         _repository = repository;
+        _sender = sender;
     }
 
     public async Task<string> ShortenUrl(string longUrl)
@@ -23,11 +26,20 @@ public class LinkShortenerService
 
         var shortLink = new ShortLink
         {
-            HashUrl = hashLongUrlString,
+            HashLongUrl = hashLongUrlString,
             ShortUrl = shortUrl
         };
 
         await _repository.AddAsync(shortLink);
+
+        var message = new NewShortUrlMessage
+        {
+            longUrl = longUrl,
+            shortUrl = shortUrl
+        };
+        
+        _sender.Send(message);
+        
         return shortUrl;
     }
 }
