@@ -16,12 +16,12 @@ public class ShortenerController : ControllerBase
     }
 
     [HttpGet("hello")]
-    public ActionResult<string> Get()
+    public ActionResult<string> Hello()
     {
-        return "This is the Shortener Service!";
+        return "It's the Shortener Service!";
     }
 
-    [HttpPost]
+    [HttpPost("shorten")]
     public async Task<ActionResult<string>> CreateNewShortUrl([FromBody] string longUrl)
     {
         return await _service.ShortenUrl(longUrl);

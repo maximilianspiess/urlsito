@@ -15,9 +15,15 @@ public class ResolverController
     }
 
     [HttpGet("hello")]
-    public ActionResult<string> Get()
+    public ActionResult<string> Hello()
     {
-        return "This is the Resolver Service!";
+        return "It's the Resolver Service!";
+    }
+
+    [HttpGet("resolve/{shortUrl}")]
+    public ActionResult<string> ResolveUrl(string shortUrl)
+    {
+        return _service.ResolveUrl(shortUrl);
     }
     
     

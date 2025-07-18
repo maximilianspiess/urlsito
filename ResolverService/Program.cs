@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using ResolverService.Rabbit;
+using ResolverService.Redis;
 using ResolverService.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +11,9 @@ builder.Services.AddScoped<LinkResolverService>();
 // Register background rabbitMQ receiver and handler
 builder.Services.AddTransient<MessageHandler>();
 builder.Services.AddHostedService<Receiver>();
+
+// Register redis client
+builder.Services.AddSingleton<IRedisClient, RedisClient>();
 
 // Add services to the container.
 builder.Services.AddControllers();

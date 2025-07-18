@@ -4,7 +4,7 @@
   },
   "Routes": [
     {
-      "UpstreamPathTemplate": "/gateway/shortener",
+      "UpstreamPathTemplate": "/gateway/shortener/hello",
       "UpstreamHttpMethod": ["GET"],
       "DownstreamPathTemplate": "/api/shortener/hello",
       "DownstreamScheme": "http",
@@ -12,6 +12,43 @@
         {
           "Host": "localhost",
           "Port": 5040
+        }
+      ]
+    },
+    {
+      "UpstreamPathTemplate": "/gateway/shortener",
+      "UpstreamHttpMethod": ["POST"],
+      "DownstreamPathTemplate": "/api/shortener/shorten",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5040
+        }
+      ]
+    },
+    {
+      "UpstreamPathTemplate": "/gateway/resolver/hello",
+      "UpstreamHttpMethod": ["GET"],
+      "DownstreamPathTemplate": "/api/resolver/hello",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5050
+        }
+      ]
+    },
+
+    {
+      "UpstreamPathTemplate": "/gateway/resolver/resolve/{shortUrl}",
+      "UpstreamHttpMethod": ["GET"],
+      "DownstreamPathTemplate": "/api/resolver/resolve/{shortUrl}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5050
         }
       ]
     }

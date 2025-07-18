@@ -24,7 +24,6 @@ public class LinkShortenerService
         var hashLongUrlString = Convert.ToHexStringLower(hashBytes);
 
         var existingLink = await _repository.GetByLongUrlAsync(hashLongUrlString);
-        ShortLink shortLink;
         string shortUrl;
 
         if (existingLink != null)
@@ -36,7 +35,7 @@ public class LinkShortenerService
             var hashLongUrlInt = BitConverter.ToUInt128(hashBytes);
             shortUrl = (hashLongUrlInt % (1 << 30)).ToString("x8");
 
-            shortLink = new ShortLink
+            var shortLink = new ShortLink
             {
                 HashLongUrl = hashLongUrlString,
                 ShortUrl = shortUrl
