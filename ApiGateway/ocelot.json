@@ -6,7 +6,7 @@
     {
       "UpstreamPathTemplate": "/gateway/shortener",
       "UpstreamHttpMethod": ["GET"],
-      "DownstreamPathTemplate": "/api/shortener",
+      "DownstreamPathTemplate": "/api/shortener/hello",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {

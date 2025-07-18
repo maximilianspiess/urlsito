@@ -6,6 +6,6 @@ public class MessageHandler
 {
     public void HandleMessage(NewShortUrlMessage message)
     {
-        // TODO
+        Console.WriteLine($"Received message with content {message.shortUrl}");
     }
 }

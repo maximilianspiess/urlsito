@@ -20,9 +20,14 @@ public class ShortLinkRepository : IShortLinkRepository
         return await _collection.Find(new BsonDocument()).ToListAsync();
     }
 
-    public async Task<ShortLink> GetByIdAsync(string id)
+    public async Task<ShortLink?> GetByIdAsync(string id)
     {
         return await _collection.Find(Builders<ShortLink>.Filter.Eq("_id", id)).FirstOrDefaultAsync();
+    }
+
+    public async Task<ShortLink?> GetByLongUrlAsync(string longUrl)
+    {
+        return await _collection.Find(Builders<ShortLink>.Filter.Eq("hashLongUrl", longUrl)).FirstOrDefaultAsync();
     }
 
     public async Task AddAsync(ShortLink entity)

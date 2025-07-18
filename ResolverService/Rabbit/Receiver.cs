@@ -8,27 +8,33 @@ namespace ResolverService.Rabbit;
 public class Receiver : BackgroundService
 {
     private readonly MessageHandler _handler;
+    private IConnection _connection = null;
+    private IChannel _channel = null;
 
     public Receiver(MessageHandler handler)
     {
         _handler = handler;
     }
 
-    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    private async void Run(CancellationToken cancellationToken)
     {
-        var factory = new ConnectionFactory{ HostName = "localhost"};
-        await using var connection = await factory.CreateConnectionAsync(cancellationToken: stoppingToken);
-        await using var channel = await connection.CreateChannelAsync(cancellationToken: stoppingToken);
+        var factory = new ConnectionFactory
+        {
+            HostName = "localhost",
+            UserName = "guest",
+            Password = "guest"
+        };
+        _connection = await factory.CreateConnectionAsync(cancellationToken: cancellationToken);
+        _channel = await _connection.CreateChannelAsync(cancellationToken: cancellationToken);
 
-        await channel.QueueDeclareAsync("NewShortLinkQueue", cancellationToken: stoppingToken);
-        
-        await channel.QueueBindAsync(
+        await _channel.QueueDeclareAsync(
             queue: "NewShortLinkQueue",
-            exchange: string.Empty,
-            routingKey: string.Empty,
-            cancellationToken: stoppingToken);
+            durable: false,
+            exclusive: false,
+            autoDelete: false,
+            cancellationToken: cancellationToken);
 
-        var consumer = new AsyncEventingBasicConsumer(channel);
+        var consumer = new AsyncEventingBasicConsumer(_channel);
         
         consumer.ReceivedAsync += (model, ea) =>
         {
@@ -38,11 +44,13 @@ public class Receiver : BackgroundService
             return Task.CompletedTask;
         };
 
-        await channel.BasicConsumeAsync("NewShortLinkQueue", autoAck: true, consumer, cancellationToken: stoppingToken);
+        await _channel.BasicConsumeAsync("NewShortLinkQueue", autoAck: true, consumer, cancellationToken);
+    }
 
-        while (!stoppingToken.IsCancellationRequested)
-        {
-            await Task.Delay(100, stoppingToken);
-        }
+    protected override Task ExecuteAsync(CancellationToken cancellationToken)
+    {
+        Run(cancellationToken);
+        return Task.CompletedTask;
+
     }
 }

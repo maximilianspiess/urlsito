@@ -1,5 +1,6 @@
 using System.Security.Cryptography;
 using System.Text;
+using MongoDB.Driver;
 using ShortenerService.Models;
 using ShortenerService.Rabbit;
 using ShortenerService.Repository;
@@ -18,19 +19,31 @@ public class LinkShortenerService
     }
 
     public async Task<string> ShortenUrl(string longUrl)
-    {
+    {   
         var hashBytes = SHA256.HashData(Encoding.UTF8.GetBytes(longUrl));
         var hashLongUrlString = Convert.ToHexStringLower(hashBytes);
-        var hashLongUrlInt = BitConverter.ToUInt128(hashBytes);
-        var shortUrl = (hashLongUrlInt % (1 << 30)).ToString("x8");
 
-        var shortLink = new ShortLink
+        var existingLink = await _repository.GetByLongUrlAsync(hashLongUrlString);
+        ShortLink shortLink;
+        string shortUrl;
+
+        if (existingLink != null)
         {
-            HashLongUrl = hashLongUrlString,
-            ShortUrl = shortUrl
-        };
+            shortUrl = existingLink.ShortUrl;
+        }
+        else
+        {
+            var hashLongUrlInt = BitConverter.ToUInt128(hashBytes);
+            shortUrl = (hashLongUrlInt % (1 << 30)).ToString("x8");
 
-        await _repository.AddAsync(shortLink);
+            shortLink = new ShortLink
+            {
+                HashLongUrl = hashLongUrlString,
+                ShortUrl = shortUrl
+            };
+
+            await _repository.AddAsync(shortLink);
+        }
 
         var message = new NewShortUrlMessage
         {
