@@ -13,6 +13,7 @@ builder.Services.AddTransient<MessageHandler>();
 builder.Services.AddHostedService<Receiver>();
 
 // Register redis client
+builder.Services.Configure<RedisSettings>(builder.Configuration.GetSection("Redis"));
 builder.Services.AddSingleton<IRedisClient, RedisClient>();
 
 // Add services to the container.

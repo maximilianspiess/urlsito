@@ -6,7 +6,7 @@ namespace ShortenerService.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 
-public class ShortenerController : ControllerBase
+public class ShortenerController : ControllerBase, IShortenerController
 {
     private readonly LinkShortenerService _service;
 

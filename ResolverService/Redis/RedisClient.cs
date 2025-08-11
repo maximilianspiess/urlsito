@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Options;
 using ShortenerService.Models;
 using StackExchange.Redis;
 
@@ -7,10 +8,12 @@ public class RedisClient: IRedisClient
 {
     private readonly ConnectionMultiplexer _redis;
     private readonly IDatabase _database;
+    private RedisSettings _settings;
 
-    public RedisClient()
+    public RedisClient(IOptions<RedisSettings> settings)
     {
-        _redis = ConnectionMultiplexer.Connect("localhost:6379");
+        _settings = settings.Value;
+        _redis = ConnectionMultiplexer.Connect(_settings.Host + ":" + _settings.Port);
         _database = _redis.GetDatabase();
     }
         

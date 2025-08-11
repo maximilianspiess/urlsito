@@ -7,7 +7,7 @@ using ShortenerService.Repository;
 
 namespace ShortenerService.Services;
 
-public class LinkShortenerService
+public class LinkShortenerService : ILinkShortenerService
 {
     private readonly IShortLinkRepository _repository;
     private readonly ISender _sender;

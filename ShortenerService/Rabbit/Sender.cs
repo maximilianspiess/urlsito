@@ -23,7 +23,7 @@ public class Sender: ISender
         var channel = await connection.CreateChannelAsync();
 
         await channel.ExchangeDeclareAsync(
-            exchange: "urlsito",
+            exchange: _settings.ExchangeName,
             type: "direct",
             durable: true,
             autoDelete: false,
@@ -38,7 +38,7 @@ public class Sender: ISender
 
         await channel.QueueBindAsync(
             queue: _settings.QueueName,
-            exchange: "urlsito",
+            exchange: _settings.ExchangeName,
             routingKey: string.Empty);   
     }
 
@@ -52,7 +52,7 @@ public class Sender: ISender
         var bodyBytes = Encoding.UTF8.GetBytes(body);
 
         await channel.BasicPublishAsync(
-            exchange: "urlsito",
+            exchange: _settings.ExchangeName,
             routingKey: string.Empty,
             body: bodyBytes
         );
